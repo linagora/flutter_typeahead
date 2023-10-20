@@ -171,12 +171,21 @@ class _SuggestionsListState<T> extends State<SuggestionsList<T>>
       final suggestionsLength = _suggestions?.length;
       final event = widget.keyboardSuggestionSelectionNotifier.value;
       if (event == null || suggestionsLength == null) return;
-
-      if (event == LogicalKeyboardKey.arrowDown &&
-          _suggestionIndex < suggestionsLength - 1) {
+      final shouldPlus = widget.direction == AxisDirection.down
+          ? event == LogicalKeyboardKey.arrowDown
+          : event == LogicalKeyboardKey.arrowUp;
+      final shouldSubtract = widget.direction == AxisDirection.down
+          ? event == LogicalKeyboardKey.arrowUp
+          : event == LogicalKeyboardKey.arrowDown;
+      if (shouldPlus) {
         _suggestionIndex++;
-      } else if (event == LogicalKeyboardKey.arrowUp && _suggestionIndex > -1) {
+      } else if (shouldSubtract) {
         _suggestionIndex--;
+      }
+      if (_suggestionIndex >= suggestionsLength) {
+        _suggestionIndex = -1;
+      } else if (_suggestionIndex < -1) {
+        _suggestionIndex = suggestionsLength - 1;
       }
 
       if (_suggestionIndex > -1 && _suggestionIndex < _focusNodes.length) {
