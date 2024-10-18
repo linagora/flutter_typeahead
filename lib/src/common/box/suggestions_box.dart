@@ -109,6 +109,7 @@ class SuggestionsBox<T> extends StatelessWidget {
         child: SuggestionsBoxFocusConnector<T>(
           controller: controller,
           child: PointerInterceptor(
+            intercepting: controller.suggestions?.isNotEmpty ?? false,
             child: Builder(
               builder: (context) => wrapper(
                 context,
